@@ -15,7 +15,7 @@ connectDB()
 
 // Middleware
 app.use(cors({
-    origin: "http://localhost:5173",
+    origin: "https://ecommerecesitefrontend-git-main-sumit-dev1.vercel.app/",
     credentials: true
 }));
 
