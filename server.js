@@ -15,7 +15,7 @@ connectDB()
 
 // Middleware
 app.use(cors({
-    origin: "https://ecommerecesitefrontend-git-main-sumit-dev1.vercel.app/",
+    origin: "https://ecommerecesitefrontend-git-main-sumit-dev1.vercel.app",
     credentials: true
 }));
 
