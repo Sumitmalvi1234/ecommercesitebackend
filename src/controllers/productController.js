@@ -10,7 +10,9 @@ const createProduct = async (req, res) => {
             stock
         } = req.body;
 
+        // --- FIXED: Inject the logged-in user's ID ---
         const product = await Product.create({
+            userId: req.user.userId, 
             name,
             description,
             price,
@@ -25,7 +27,6 @@ const createProduct = async (req, res) => {
 
     } catch (error) {
         console.error(error);
-
         res.status(500).json({
             success: false,
             message: "Server error"
@@ -34,10 +35,11 @@ const createProduct = async (req, res) => {
 };
 
 
-// GET ALL PRODUCTS
+// GET ALL PRODUCTS FOR LOGGED-IN USER
 const getProducts = async (req, res) => {
     try {
-        const products = await Product.find()
+        // --- FIXED: Filter by the user's explicit ID ---
+        const products = await Product.find({ userId: req.user.userId })
             .sort({ createdAt: -1 });
 
         res.status(200).json({
@@ -48,7 +50,6 @@ const getProducts = async (req, res) => {
 
     } catch (error) {
         console.error(error);
-
         res.status(500).json({
             success: false,
             message: "Server error"
@@ -57,12 +58,13 @@ const getProducts = async (req, res) => {
 };
 
 
-// GET SINGLE PRODUCT
+// GET SINGLE PRODUCT (Only if it belongs to the user)
 const getProduct = async (req, res) => {
     try {
         const product = await Product.findById(req.params.id);
 
-        if (!product) {
+        // --- FIXED: Verify existence AND ownership ---
+        if (!product || product.userId.toString() !== req.user.userId.toString()) {
             return res.status(404).json({
                 success: false,
                 message: "Product not found"
@@ -76,7 +78,6 @@ const getProduct = async (req, res) => {
 
     } catch (error) {
         console.error(error);
-
         res.status(500).json({
             success: false,
             message: "Server error"
@@ -90,7 +91,8 @@ const updateProduct = async (req, res) => {
     try {
         const product = await Product.findById(req.params.id);
 
-        if (!product) {
+        // --- FIXED: Security gate check ---
+        if (!product || product.userId.toString() !== req.user.userId.toString()) {
             return res.status(404).json({
                 success: false,
                 message: "Product not found"
@@ -130,7 +132,6 @@ const updateProduct = async (req, res) => {
 
     } catch (error) {
         console.error(error);
-
         res.status(500).json({
             success: false,
             message: "Server error"
@@ -144,7 +145,8 @@ const deleteProduct = async (req, res) => {
     try {
         const product = await Product.findById(req.params.id);
 
-        if (!product) {
+        // --- FIXED: Security gate check ---
+        if (!product || product.userId.toString() !== req.user.userId.toString()) {
             return res.status(404).json({
                 success: false,
                 message: "Product not found"
@@ -160,7 +162,6 @@ const deleteProduct = async (req, res) => {
 
     } catch (error) {
         console.error(error);
-
         res.status(500).json({
             success: false,
             message: "Server error"

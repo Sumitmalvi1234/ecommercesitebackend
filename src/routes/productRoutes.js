@@ -9,7 +9,6 @@ const {
 } = require("../controllers/productController");
 
 const authenticate = require("../middleware/authMiddleware");
-
 const validate = require("../middleware/validationMiddleware");
 
 const {
@@ -31,16 +30,18 @@ router.post(
 );
 
 
-// READ ALL
+// READ ALL -> FIXED: Added authenticate middleware
 router.get(
     "/",
+    authenticate,
     getProducts
 );
 
 
-// READ ONE
+// READ ONE -> FIXED: Added authenticate middleware
 router.get(
     "/:id",
+    authenticate,
     productIdValidator,
     validate,
     getProduct

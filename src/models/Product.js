@@ -2,6 +2,14 @@ const mongoose = require("mongoose");
 
 const productSchema = new mongoose.Schema(
     {
+        // --- ADD THIS FIELD TO LINK PRODUCT TO A USER ---
+        userId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
+            required: true
+        },
+        // ------------------------------------------------
+
         name: {
             type: String,
             required: true,
